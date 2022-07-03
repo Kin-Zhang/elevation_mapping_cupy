@@ -385,7 +385,7 @@ void ElevationMappingNode::initializeWithTF() {
     points.emplace_back(p + Eigen::Vector3d(-initializeTfGridSize_, -initializeTfGridSize_, 0));
   }
   ROS_INFO_STREAM("Initializing map with points using " << initializeMethod_);
-  map_.initializeWithPoints(points, initializeMethod_);
+  // map_.initializeWithPoints(points, initializeMethod_);
 }
 
 bool ElevationMappingNode::checkSafety(elevation_map_msgs::CheckSafety::Request& request,

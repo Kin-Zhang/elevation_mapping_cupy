@@ -3,7 +3,7 @@ numpy
 scipy
 dataclasses
 ruamel.yaml
-opencv-python
+# opencv-python # will install by ros
 
 ###### Requirements with Version Specifiers ######`
 shapely==1.7.1

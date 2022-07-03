@@ -1,5 +1,6 @@
 # %Tag(FULLTEXT)%
 cmake_minimum_required(VERSION 3.0.2)
+set (CXX11_FLAG "-std=c++${_F}")
 project(elevation_mapping_cupy)
 
 find_package(PythonInterp 3 REQUIRED)
