@@ -39,6 +39,9 @@ ElevationMappingNode::ElevationMappingNode(ros::NodeHandle& nh)
   bool enablePointCloudPublishing(false);
 
   nh.param<std::vector<std::string>>("pointcloud_topics", pointcloud_topics, {"points"});
+  nh.param<bool>("enable_clear", enableClear, false);
+  // nh.getParam("enable_clear", enableClear);
+  ROS_INFO("====> [Setting Clear] : %d", enableClear);
   nh.getParam("publishers", publishers);
   nh.param<std::vector<std::string>>("initialize_frame_id", initialize_frame_id_, {"base"});
   nh.param<std::vector<double>>("initialize_tf_offset", initialize_tf_offset_, {0.0});
@@ -216,6 +219,13 @@ void ElevationMappingNode::publishMapOfIndex(int index) {
 }
 
 void ElevationMappingNode::pointcloudCallback(const sensor_msgs::PointCloud2& cloud) {
+  //
+  if(enableClear)
+  {
+    ROS_INFO("Clearing map ====> ");
+    map_.clear();
+    // initializeWithTF();
+  }
   auto start = ros::Time::now();
   pcl::PCLPointCloud2 pcl_pc;
   pcl_conversions::toPCL(cloud, pcl_pc);

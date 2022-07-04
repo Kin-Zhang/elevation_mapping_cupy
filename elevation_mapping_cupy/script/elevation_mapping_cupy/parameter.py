@@ -58,7 +58,7 @@ class Parameter:
     use_chainer: bool = True
     position_noise_thresh: float = 0.1
     orientation_noise_thresh: float = 0.1
-
+    enableClear: bool = False
     plugin_config_file: str = "config/plugin_config.yaml"
     weight_file: str = "config/weights.dat"
 

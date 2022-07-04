@@ -127,6 +127,7 @@ class ElevationMappingNode {
 
   double recordableFps_;
   std::atomic_bool enablePointCloudPublishing_;
+  bool enableClear;
   bool enableNormalArrowPublishing_;
   bool enableDriftCorrectedTFPublishing_;
   bool useInitializerAtStart_;
