@@ -134,6 +134,7 @@ ElevationMappingNode::ElevationMappingNode(ros::NodeHandle& nh)
   }
   if (updatePoseFps > 0) {
     double duration = 1.0 / (updatePoseFps + 0.00001);
+    std::cout<<"in update pose"<<std::endl;
     updatePoseTimer_ = nh_.createTimer(ros::Duration(duration), &ElevationMappingNode::updatePose, this, false, true);
   }
   if (updateGridMapFps > 0) {
@@ -269,6 +270,7 @@ void ElevationMappingNode::pointcloudCallback(const sensor_msgs::PointCloud2& cl
 
 void ElevationMappingNode::updatePose(const ros::TimerEvent&) {
   tf::StampedTransform transformTf;
+  // std::cout<<"in update pose function"<<std::endl;
   const auto& timeStamp = ros::Time::now();
   try {
     transformListener_.waitForTransform(mapFrameId_, baseFrameId_, timeStamp, ros::Duration(1.0));
@@ -277,9 +279,10 @@ void ElevationMappingNode::updatePose(const ros::TimerEvent&) {
     ROS_ERROR("%s", ex.what());
     return;
   }
-
+  // std::cout<<"success for update pose function"<<std::endl;
   // This is to check if the robot is moving. If the robot is not moving, drift compensation is disabled to avoid creating artifacts.
   Eigen::Vector3d position(transformTf.getOrigin().x(), transformTf.getOrigin().y(), transformTf.getOrigin().z());
+  // std::cout<< "transform" <<transformTf.getOrigin().x()<<" " << transformTf.getOrigin().y()<<" " <<transformTf.getOrigin().z()<< std::endl;
   map_.move_to(position);
   Eigen::Vector3d position3(transformTf.getOrigin().x(), transformTf.getOrigin().y(), transformTf.getOrigin().z());
   Eigen::Vector4d orientation(transformTf.getRotation().x(), transformTf.getRotation().y(), transformTf.getRotation().z(),

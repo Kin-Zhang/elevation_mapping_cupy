@@ -57,17 +57,21 @@ include_directories(
 
 add_library(elevation_mapping_ros
     src/elevation_mapping_wrapper.cpp
-    src/elevation_mapping_ros.cpp)
+    src/elevation_mapping_ros.cpp
+    src/translate_t2_pcd.cpp)
 
 target_link_libraries(elevation_mapping_ros ${PYTHON_LIBRARIES} ${catkin_LIBRARIES})
 
 add_executable(elevation_mapping_node src/elevation_mapping_node.cpp)
 target_link_libraries(elevation_mapping_node elevation_mapping_ros)
 
+add_executable(translate_t2_pcd src/translate_t2_pcd.cpp)
+target_link_libraries(translate_t2_pcd elevation_mapping_ros)
+
 catkin_python_setup()
 
 install(
-  TARGETS elevation_mapping_ros elevation_mapping_node
+  TARGETS elevation_mapping_ros elevation_mapping_node translate_t2_pcd
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})

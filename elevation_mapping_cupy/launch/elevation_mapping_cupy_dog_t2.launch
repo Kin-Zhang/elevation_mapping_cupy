@@ -1,0 +1,24 @@
+<launch>
+  <node type="rviz" name="rviz_elev" pkg="rviz" args="-d $(find elevation_mapping_cupy)/rviz/tf2_debug.rviz" />
+  <arg name="folder_path" default="/home/kin/workspace/elevation_ws/src/bag_data/0706_LG5LG7_LG1"/>
+  <!-- Elevation mapping node -->
+  <param name="use_sim_time" value="true" />
+  <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
+    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/parameters_dog_t2.yaml" />
+  </node>
+
+  <!-- translation matrix, pub odom and new_map tf -->
+  <param name="use_sim_time" value="true" />
+  <node pkg="elevation_mapping_cupy" type="translate_t2_pcd" name="translate_t2_pcd_debug" output="screen">
+    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/translate_tf.yaml" />
+  </node>
+
+  <!-- rosbag play and record-->
+  <arg name="bag_file" default="$(arg folder_path)/dog/mapping_2022-07-06-21-36-51.bag" />
+  <param name="use_sim_time" value="true" />
+  <node pkg="rosbag" type="play" name="bag_play" args="$(arg bag_file) --clock -d 5 -r 0.6"/>
+
+  <arg name="recordf" default="$(arg folder_path)/grid_map_compare/mapping_2022-07-06-21-36-51-t2.bag" />
+  <node pkg="rosbag" type="record" name="bag_record" args="--output-name $(arg recordf) /elevation_mapping/elevation_map_filter"/>
+
+</launch>

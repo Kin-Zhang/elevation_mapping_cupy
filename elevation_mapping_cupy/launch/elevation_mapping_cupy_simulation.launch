@@ -1,0 +1,19 @@
+<launch>
+  <node type="rviz" name="rviz_elev" pkg="rviz" args="-d $(find elevation_mapping_cupy)/rviz/ramlab_setting.rviz" />
+  <arg name="folder_path" default="/home/kin/workspace/elevation_ws/src/bag_data/simulation"/>
+
+  <!-- Elevation mapping node -->
+  <param name="use_sim_time" value="true" />
+  <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
+    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/parameters_gt.yaml" />
+  </node>
+
+  <!-- rosbag play and record-->
+  <arg name="bag_file" default="$(arg folder_path)/copp_map_81.bag" />
+  <param name="use_sim_time" value="true" />
+  <node pkg="rosbag" type="play" name="bag_play" args="$(arg bag_file) --clock -d 5 -r 2"/>
+
+  <arg name="recordf" default="$(arg folder_path)/copp_map_81_elevation_map.bag" />
+  <node pkg="rosbag" type="record" name="bag_record" args="--output-name $(arg recordf) /elevation_mapping/elevation_map_filter /map_ground_truth"/>
+
+</launch>

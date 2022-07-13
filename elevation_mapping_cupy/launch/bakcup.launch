@@ -1,0 +1,2 @@
+<arg name="recordf" default="/home/kin/workspace/elevation_ws/src/bag_data/simulation/LG72LG5_result_elevation_cupy.bag" />
+<node pkg="rosbag" type="record" name="bag_record" args="--output-name $(arg recordf) /auto_odom /elevation_mapping/elevation_map_filter /map_ground_truth"/>
