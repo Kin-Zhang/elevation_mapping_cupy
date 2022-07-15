@@ -42,11 +42,51 @@ struct pose
 
 
 static bool _debug_print = true;
-static std::string _odom_topic="/odom", _new_frame_id="/new_velodyne";
-static ros::Publisher t2pcd_pub, t2odom_pub;
+static std::string _odom_topic="/odom", _new_frame_id="/new_velodyne", _lidar_topic, _output_lidar_topic;
+static ros::Publisher t2pcd_pub, t2odom_pub, ignore_point_pub;
 
 static ros::Time current_scan_time;
 Eigen::Matrix4f T_2, tf_origin, tf_after_T2;
+
+#define PI 3.14159265
+
+static int _ignore_af = 0;
+static float _ignore_df = 0;
+static int _ignore_ar = 0;
+static float _ignore_dr = 0;
+
+double tan_rear, tan_front;
+
+static void points_callback(const sensor_msgs::PointCloud2::ConstPtr& input)
+{
+
+  // single point
+  pcl::PointXYZI p;
+  pcl::PointCloud<pcl::PointXYZI> tmp, scan;
+
+  pcl::fromROSMsg(*input, tmp);
+  for (pcl::PointCloud<pcl::PointXYZI>::const_iterator item = tmp.begin(); item != tmp.end(); item++)
+  {
+    p.x = (double)item->x;
+    p.y = (double)item->y;
+    p.z = (double)item->z;
+    p.intensity = (double)item->intensity;
+    double dis_p = p.x*p.x+p.y*p.y;
+    double tan_p = abs(p.y/p.x);
+
+    // point in rear
+    if(p.x<=0 && _ignore_dr != 0 && dis_p<(_ignore_dr*_ignore_dr) && tan_p < tan_rear)
+      continue;
+    else if(p.x>0 && _ignore_df != 0 && dis_p<(_ignore_df*_ignore_df) && tan_p < tan_front)
+      continue;
+      
+    scan.push_back(p);
+  }
+  sensor_msgs::PointCloud2 map_cloud;
+  pcl::toROSMsg(scan, map_cloud);
+  map_cloud.header = input->header;
+  ignore_point_pub.publish(map_cloud);
+}
 
 static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
 {
@@ -114,9 +154,9 @@ static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
                     static_cast<double>(T_2_inv(2, 0)),  static_cast<double>(T_2_inv(2, 1)),
                     static_cast<double>(T_2_inv(2, 2)));
     // Update current_pose.
-    tf2_pose.x = T_2_inv(0, 3);
+    tf2_pose.x = T_2_inv(0, 3) - 0.243;
     tf2_pose.y = T_2_inv(1, 3);
-    tf2_pose.z = T_2_inv(2, 3);
+    tf2_pose.z = T_2_inv(2, 3) - 0.1338;
     mat_tf2.getRPY(tf2_pose.roll, tf2_pose.pitch, tf2_pose.yaw, 1);
     qt_2.setRPY(tf2_pose.roll, tf2_pose.pitch, tf2_pose.yaw);
 
@@ -132,7 +172,16 @@ int main(int argc, char **argv)
     ros::NodeHandle nh;
     ros::NodeHandle private_nh("~");
     private_nh.getParam("odom_topic", _odom_topic);
+    private_nh.getParam("lidar_topic", _lidar_topic);
     private_nh.getParam("new_frame_id", _new_frame_id);
+    private_nh.getParam("output_lidar_topic", _output_lidar_topic);
+
+    private_nh.getParam("ignore_angle_front", _ignore_af);
+    private_nh.getParam("ignore_dis_front", _ignore_df);
+    private_nh.getParam("ignore_angle_rear", _ignore_ar);
+    private_nh.getParam("ignore_dis_rear", _ignore_dr);
+    tan_rear = tan(_ignore_ar/2 * PI / 180.0);
+    tan_front = tan(_ignore_af/2 * PI / 180.0);
 
     std::string _output_odom_topic;
     private_nh.getParam("output_odom_topic", _output_odom_topic);
@@ -151,6 +200,8 @@ int main(int argc, char **argv)
     T_2 = Eigen::Map<Eigen::Matrix4f> (array,4,4);
 
     ros::Subscriber odom_sub = nh.subscribe(_odom_topic, 1000, odom_callback);
+    ros::Subscriber points_sub = nh.subscribe(_lidar_topic, 100000, points_callback);
+    ignore_point_pub = nh.advertise<sensor_msgs::PointCloud2>(_output_lidar_topic, 1000);
     t2odom_pub = nh.advertise<nav_msgs::Odometry>(_output_odom_topic, 1000);
     ros::spin();
     return 0;

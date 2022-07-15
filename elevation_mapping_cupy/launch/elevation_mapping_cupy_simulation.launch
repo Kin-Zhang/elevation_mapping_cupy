@@ -5,7 +5,7 @@
   <!-- Elevation mapping node -->
   <param name="use_sim_time" value="true" />
   <node pkg="elevation_mapping_cupy" type="elevation_mapping_node" name="elevation_mapping" output="screen">
-    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/parameters_gt.yaml" />
+    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/parameters_simu.yaml" />
   </node>
 
   <!-- rosbag play and record-->
