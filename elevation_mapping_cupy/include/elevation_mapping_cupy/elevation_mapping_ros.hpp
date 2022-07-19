@@ -91,6 +91,7 @@ class ElevationMappingNode {
   ros::Timer updateGridMapTimer_;
   ros::Timer publishStatisticsTimer_;
   ros::Time lastStatisticsPublishedTime_;
+  ros::Time cloud_timeStamp;
   tf::TransformListener transformListener_;
   ElevationMappingWrapper map_;
   std::string mapFrameId_;

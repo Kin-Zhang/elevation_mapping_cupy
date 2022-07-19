@@ -40,7 +40,7 @@ max_unsafe_n: 10                                # if the number of cells under s
 overlap_clear_range_xy: 4.0                     # xy range [m] for clearing overlapped area. this defines the valid area for overlap clearance. (used for multi floor setting)
 overlap_clear_range_z: 2.0                      # z range [m] for clearing overlapped area. cells outside this range will be cleared. (used for multi floor setting)
 
-map_frame: 'new_map'                               # The map frame where the odometry source uses.
+map_frame: 'map'                               # The map frame where the odometry source uses.
 base_frame: 'velodyne'                              # The robot's base frame. This frame will be a center of the map.
 corrected_map_frame: 'corrected_odom'
 
@@ -64,8 +64,6 @@ use_only_above_for_upper_bound: false
 plugin_config_file: '$(rospack find elevation_mapping_cupy)/config/plugin_config.yaml'
 
 #### Subscribers ########
-# pointcloud_topics: ['/velodyne_points',
-#                     ]
 pointcloud_topics: ['/vdb_map',
                     ]
 enable_clear: true
@@ -95,7 +93,3 @@ initialize_tf_offset: [0.0, 0.0, 0.0, 0.0]                          # z directio
 dilation_size_initialize: 5                                         # dilation size after the init.
 initialize_tf_grid_size: 0.4                                        # This is not used if number of tf is more than 3.
 use_initializer_at_start: true                                      # Use initializer when the node starts.
-
-lidar_topic: "/velodyne_points"
-odom_topic: "/auto_odom"
-map_dim: 200

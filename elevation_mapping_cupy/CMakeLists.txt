@@ -70,6 +70,9 @@ target_link_libraries(translate_t2_pcd elevation_mapping_ros)
 
 catkin_python_setup()
 
+catkin_install_python(PROGRAMS script/filter_rate/pub_filter_rate.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 install(
   TARGETS elevation_mapping_ros elevation_mapping_node translate_t2_pcd
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

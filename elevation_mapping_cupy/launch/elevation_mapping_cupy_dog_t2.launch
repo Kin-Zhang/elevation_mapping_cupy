@@ -12,8 +12,8 @@
     <rosparam command="load" file="$(find elevation_mapping_cupy)/config/translate_tf.yaml" />
   </node>
 
-  <arg name="folder_path" default="/home/kin/workspace/elevation_ws/src/bag_data/0706_LG157"/>
-  <arg name="bag_name" default="LG57_mapping_2022-07-06-21-39-45.bag"/>
+  <arg name="folder_path" default="/home/kin/workspace/elevation_ws/src/bag_data/0708_TB_LSK_Shaw_CYT"/>
+  <arg name="bag_name" default="CYT_mapping_2022-07-08-18-59-35.bag"/>
 
   <!-- rosbag play and record-->
   <arg name="bag_file" default="$(arg folder_path)/$(arg bag_name)" />

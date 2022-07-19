@@ -322,7 +322,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 5.616796493530273
+      Distance: 17.444917678833008
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -359,4 +359,4 @@ Window Geometry:
     collapsed: true
   Width: 1368
   X: 510
-  Y: 60
+  Y: 27

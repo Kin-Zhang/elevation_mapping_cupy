@@ -214,7 +214,7 @@ void ElevationMappingNode::publishMapOfIndex(int index) {
 
     grid_map::GridMapRosConverter::toMessage(gridMap_, layers, msg);
   }
-
+  msg.info.header.stamp = cloud_timeStamp;
   msg.basic_layers = map_basic_layers_[index];
   mapPubs_[index].publish(msg);
 }
@@ -235,11 +235,11 @@ void ElevationMappingNode::pointcloudCallback(const sensor_msgs::PointCloud2& cl
   pcl::fromPCLPointCloud2(pcl_pc, *pointCloud);
   tf::StampedTransform transformTf;
   std::string sensorFrameId = cloud.header.frame_id;
-  auto timeStamp = cloud.header.stamp;
+  cloud_timeStamp = cloud.header.stamp;
   Eigen::Affine3d transformationSensorToMap;
   try {
-    transformListener_.waitForTransform(mapFrameId_, sensorFrameId, timeStamp, ros::Duration(1.0));
-    transformListener_.lookupTransform(mapFrameId_, sensorFrameId, timeStamp, transformTf);
+    transformListener_.waitForTransform(mapFrameId_, sensorFrameId, cloud_timeStamp, ros::Duration(1.0));
+    transformListener_.lookupTransform(mapFrameId_, sensorFrameId, cloud_timeStamp, transformTf);
     poseTFToEigen(transformTf, transformationSensorToMap);
   } catch (tf::TransformException& ex) {
     ROS_ERROR("%s", ex.what());

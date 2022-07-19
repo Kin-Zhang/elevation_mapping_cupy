@@ -129,13 +129,13 @@ static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
     nav_msgs::Odometry new_odom;
     tf::Quaternion q;
     q.setRPY(current_pose.roll, current_pose.pitch, current_pose.yaw);
-    new_odom.header.frame_id = "new_map";
+    new_odom.header.frame_id = "map";
     new_odom.child_frame_id = _new_frame_id;
     new_odom.header.stamp = current_scan_time;
 
-    new_odom.pose.pose.position.x = current_pose.x;
+    new_odom.pose.pose.position.x = current_pose.x - 0.243;
     new_odom.pose.pose.position.y = current_pose.y;
-    new_odom.pose.pose.position.z = current_pose.z;
+    new_odom.pose.pose.position.z = current_pose.z - 0.1338;
     new_odom.pose.pose.orientation.x = q.x();
     new_odom.pose.pose.orientation.y = q.y();
     new_odom.pose.pose.orientation.z = q.z();
