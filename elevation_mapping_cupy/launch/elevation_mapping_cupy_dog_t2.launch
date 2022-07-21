@@ -13,7 +13,9 @@
   </node>
 
   <!-- for filter mask to evaluate more accuracy -->
-  <node pkg="elevation_mapping_cupy" name="pub_filter_mask_cupy" type="pub_filter_rate.py" output="screen" />
+  <node pkg="elevation_mapping_cupy" name="" type="pub_filter_rate.py" output="screen" >
+    <rosparam command="load" file="$(find elevation_mapping_cupy)/config/filter_rate/obs_mask_cupy.yaml" />
+  </node>
 
   <arg name="folder_path" default="/home/kin/workspace/elevation_ws/src/bag_data/0708_TB_LSK_Shaw_CYT"/>
   <arg name="bag_name" default="CYT_mapping_2022-07-08-18-59-35.bag"/>

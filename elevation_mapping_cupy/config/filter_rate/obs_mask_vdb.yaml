@@ -1,0 +1,5 @@
+# topic setting
+map_dim: 500
+lidar_topic: "/velodyne_points"
+odom_topic: "/t2_odom"
+map_frame_id: "new_map"

@@ -95,7 +95,7 @@ Visualization Manager:
       Color: 200; 200; 200
       Color Layer: inpaint
       Color Transformer: ""
-      Enabled: true
+      Enabled: false
       Height Layer: inpaint
       Height Transformer: Layer
       History Length: 1
@@ -109,14 +109,14 @@ Visualization Manager:
       Topic: /elevation_mapping/elevation_map_filter
       Unreliable: false
       Use Rainbow: true
-      Value: true
+      Value: false
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Class: grid_map_rviz_plugin/GridMap
       Color: 200; 200; 200
       Color Layer: elevation
       Color Transformer: GridMapLayer
-      Enabled: false
+      Enabled: true
       Height Layer: elevation
       Height Transformer: ""
       History Length: 1
@@ -130,7 +130,7 @@ Visualization Manager:
       Topic: /elevation_mapping/elevation_map_raw
       Unreliable: false
       Use Rainbow: true
-      Value: false
+      Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
       Autocompute Value Bounds:
@@ -143,7 +143,7 @@ Visualization Manager:
       Color: 255; 255; 255
       Color Transformer: Intensity
       Decay Time: 0
-      Enabled: true
+      Enabled: false
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
@@ -158,7 +158,7 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
-      Value: true
+      Value: false
     - Alpha: 0.5
       Autocompute Intensity Bounds: true
       Class: grid_map_rviz_plugin/GridMap
@@ -185,7 +185,55 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: true
+        base_link:
+          Value: true
+        cam_lookdn_accel_frame:
+          Value: true
+        cam_lookdn_accel_optical_frame:
+          Value: true
+        cam_lookdn_aligned_depth_to_color_frame:
+          Value: true
+        cam_lookdn_color_frame:
+          Value: true
+        cam_lookdn_color_optical_frame:
+          Value: true
+        cam_lookdn_depth_frame:
+          Value: true
+        cam_lookdn_depth_optical_frame:
+          Value: true
+        cam_lookdn_gyro_frame:
+          Value: true
+        cam_lookdn_gyro_optical_frame:
+          Value: true
+        cam_lookdn_link:
+          Value: true
+        cam_lookup_accel_frame:
+          Value: true
+        cam_lookup_accel_optical_frame:
+          Value: true
+        cam_lookup_aligned_depth_to_color_frame:
+          Value: true
+        cam_lookup_color_frame:
+          Value: true
+        cam_lookup_color_optical_frame:
+          Value: true
+        cam_lookup_depth_frame:
+          Value: true
+        cam_lookup_depth_optical_frame:
+          Value: true
+        cam_lookup_gyro_frame:
+          Value: true
+        cam_lookup_gyro_optical_frame:
+          Value: true
+        cam_lookup_link:
+          Value: true
+        lidar:
+          Value: true
         map:
+          Value: true
+        new_map:
+          Value: true
+        rslidar:
           Value: true
         velodyne:
           Value: true
@@ -197,7 +245,14 @@ Visualization Manager:
       Show Names: true
       Tree:
         map:
-          velodyne:
+          base_link:
+            lidar:
+              {}
+            rslidar:
+              {}
+            velodyne:
+              {}
+          new_map:
             {}
       Update Interval: 0
       Value: true
@@ -207,7 +262,7 @@ Visualization Manager:
       Color: 200; 200; 200
       Color Layer: omask
       Color Transformer: GridMapLayer
-      Enabled: true
+      Enabled: false
       Height Layer: omask
       Height Transformer: GridMapLayer
       History Length: 1
@@ -221,7 +276,7 @@ Visualization Manager:
       Topic: /filter_grid
       Unreliable: false
       Use Rainbow: false
-      Value: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -250,7 +305,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 8.297982215881348
+      Distance: 3.539214611053467
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -258,17 +313,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.9519104957580566
-        Y: -1.3197616338729858
-        Z: -6.106994078436401e-06
+        X: 5.7589826583862305
+        Y: 0.7120538949966431
+        Z: -6.345412657537963e-06
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5697963237762451
+      Pitch: 1.0447971820831299
       Target Frame: <Fixed Frame>
-      Yaw: 1.0635266304016113
+      Yaw: 1.6485329866409302
     Saved: ~
 Window Geometry:
   Displays:

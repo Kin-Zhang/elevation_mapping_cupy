@@ -149,6 +149,8 @@ class Filling:
             print(f"enable clip to small one, from {ocol}x{ocol} to {self.clip}x{self.clip}")
             map_layer = map_layer[:, delta//2:delta//2+self.clip, delta//2:delta//2+self.clip]
             map_dim = self.clip
+        else:
+            map_dim = self.map_dim
         header = Header()
         header.seq = 0
         header.stamp = time_stamp
@@ -193,7 +195,11 @@ if __name__ == '__main__':
     rospy.init_node('pub_filter_rate')
     variable = 500
     odom_topic, lidar_topic, map_frame = "/t2_odom", "/velodyne_points", "new_map"
-
+    try:
+        rospy.get_param_names()
+    except:
+        print("could not get param name")
+        
     if rospy.has_param("map_dim"):
         variable = rospy.get_param("map_dim")
         odom_topic = rospy.get_param("odom_topic")
