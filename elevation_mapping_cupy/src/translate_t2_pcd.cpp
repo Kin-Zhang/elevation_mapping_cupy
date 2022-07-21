@@ -91,23 +91,28 @@ static void points_callback(const sensor_msgs::PointCloud2::ConstPtr& input)
 static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
 {
     current_scan_time = input->header.stamp;
+    Eigen::Matrix4f T_2_inv = T_2.inverse(); //
 
     // =============> from input to translation matrix
     double tf_x, tf_y, tf_z, tf_roll, tf_pitch, tf_yaw;
-    tf_x = input->pose.pose.position.x;
+    tf_x = input->pose.pose.position.x + 0.243;//
     tf_y = input->pose.pose.position.y;
-    tf_z = input->pose.pose.position.z;
+    tf_z = input->pose.pose.position.z + 0.1338;// 
     Eigen::Translation3f tl_btol(tf_x, tf_y, tf_z);// tl: translation
 
-    double input_roll, input_pitch, input_yaw;
+    // orientation
     tf::Quaternion input_orientation;
     tf::quaternionMsgToTF(input->pose.pose.orientation, input_orientation);
-    tf::Matrix3x3(input_orientation).getRPY(input_roll, input_pitch, input_yaw);
+    tf::Matrix3x3(input_orientation).getRPY(tf_roll, tf_pitch, tf_yaw);
+
     Eigen::AngleAxisf rot_x_btol(tf_roll, Eigen::Vector3f::UnitX());  // rot: rotation
     Eigen::AngleAxisf rot_y_btol(tf_pitch, Eigen::Vector3f::UnitY());
     Eigen::AngleAxisf rot_z_btol(tf_yaw, Eigen::Vector3f::UnitZ());
+
+    // translation * rotation
     tf_origin = (tl_btol * rot_z_btol * rot_y_btol * rot_x_btol).matrix();
 
+    // 
     tf_after_T2 = T_2 * tf_origin;
 
     tf::Matrix3x3 mat_l;
@@ -129,13 +134,13 @@ static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
     nav_msgs::Odometry new_odom;
     tf::Quaternion q;
     q.setRPY(current_pose.roll, current_pose.pitch, current_pose.yaw);
-    new_odom.header.frame_id = "map";
+    new_odom.header.frame_id = "new_map";
     new_odom.child_frame_id = _new_frame_id;
     new_odom.header.stamp = current_scan_time;
 
-    new_odom.pose.pose.position.x = current_pose.x - 0.243;
+    new_odom.pose.pose.position.x = current_pose.x;
     new_odom.pose.pose.position.y = current_pose.y;
-    new_odom.pose.pose.position.z = current_pose.z - 0.1338;
+    new_odom.pose.pose.position.z = current_pose.z;
     new_odom.pose.pose.orientation.x = q.x();
     new_odom.pose.pose.orientation.y = q.y();
     new_odom.pose.pose.orientation.z = q.z();
@@ -143,7 +148,6 @@ static void odom_callback(const nav_msgs::Odometry::ConstPtr& input)
     t2odom_pub.publish(new_odom);
 
     // TF pub
-    Eigen::Matrix4f T_2_inv = T_2.inverse(); //
     static tf::Matrix3x3 mat_tf2;
     static tf::Quaternion qt_2;
     static tf::TransformBroadcaster br;

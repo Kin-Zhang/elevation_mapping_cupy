@@ -23,7 +23,7 @@ class FillingMask(object):
         self.initializeKernels()
 
     def initializeKernels(self):
-        self.min_sensor_distance_bk = 0.1#float(cfg['kernels']['min_sensor_distance_bk'])
+        self.min_sensor_distance_bk = 0.8#float(cfg['kernels']['min_sensor_distance_bk'])
         self.min_sensor_distance_fn = 0.1#float(cfg['kernels']['min_sensor_distance_fn'])
         self.max_sensor_distance = 12.0 #float(cfg['kernels']['min_sensor_distance_fn'])
         self.max_height_range = 5#float(cfg['kernels']['max_height_range'])

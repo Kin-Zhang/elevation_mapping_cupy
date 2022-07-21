@@ -27,7 +27,7 @@ from filter_rate.filling_mask import FillingMask
 # from filter_rate.loss import *
 
 class Filling:
-    def __init__(self, map_dim=200, odomt = "/auto_odom", lidart="/velodyne_points"):
+    def __init__(self, map_dim=200, odomt = "/auto_odom", lidart="/velodyne_points", mapf="map"):
         self.map_dim = map_dim #int(cfg['map']['map_dim'])
         self.resolution = 0.04
         self.use_mf_points = False
@@ -43,9 +43,9 @@ class Filling:
 
         # Buffers
         if not self.use_mf_points:
-            self.frame_buf_size = 3#int(cfg['map']['frame_buf_size'])
+            self.frame_buf_size = 50#int(cfg['map']['frame_buf_size'])
             self.frame_buf = []
-            self.odom_buf_size = 3#int(cfg['map']['odom_buf_size'])
+            self.odom_buf_size = 50#int(cfg['map']['odom_buf_size'])
             self.odom_buf = []
         self.map_layer = np.zeros((1, self.map_dim, self.map_dim), dtype=self.d_type)
 
@@ -64,7 +64,7 @@ class Filling:
         map_topic = "/filter_grid"
         self.map_pub = rospy.Publisher(map_topic, GridMap, latch=True, queue_size=1)
         
-        self.map_frame_id = "map"
+        self.map_frame_id = mapf
         
     def odomCallback(self, odom):
         # Comapre the time stamp of odom and points frames
@@ -192,12 +192,14 @@ class Filling:
 if __name__ == '__main__':
     rospy.init_node('pub_filter_rate')
     variable = 500
-    odom_topic, lidar_topic = "/auto_odom", "/velodyne_points"
+    odom_topic, lidar_topic, map_frame = "/t2_odom", "/velodyne_points", "new_map"
+
     if rospy.has_param("map_dim"):
         variable = rospy.get_param("map_dim")
         odom_topic = rospy.get_param("odom_topic")
         lidar_topic = rospy.get_param("lidar_topic")
-        print(f"getting rosparam: {variable}")
+        map_frame = rospy.get_param("map_frame_id")
+        print(f"=======> getting rosparam: {variable}")
 
-    mapping = Filling(map_dim=variable,odomt = odom_topic, lidart=lidar_topic)
+    mapping = Filling(map_dim=variable,odomt = odom_topic, lidart=lidar_topic, mapf=map_frame)
     rospy.spin()
