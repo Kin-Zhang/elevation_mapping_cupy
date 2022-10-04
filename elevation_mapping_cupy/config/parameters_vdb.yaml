@@ -68,7 +68,7 @@ plugin_config_file: '$(rospack find elevation_mapping_cupy)/config/plugin_config
 #                     ]
 pointcloud_topics: ['/vdb_map',
                     ]
-enable_clear: true
+enable_clear: false
 #### Publishers ########
 # topic_name:
 #   layers:               # Choose from 'elevation', 'variance', 'traversability', 'time', 'normal_x', 'normal_y', 'normal_z', 'color', plugin_layer_names
