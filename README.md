@@ -183,25 +183,6 @@ sudo apt install libmpfr-dev
 sudo apt install libboost-all-dev
 ```
 
-#### PCL (for ANYmal research users)
-
-PCL is required, but the ANYbotics distributed version does not contain visualization components. With pcl_visualization_catkin, the missing
-components are provided into your catkin workspace (for pcl 1.10). Additionally vtk7 is required, DO NOT install this on the ANYmal onboard
-PCs, only on OPC and simulation PCs.
-
-```bash
-sudo apt install libvtk7-dev
-catkin build pcl_visualization_catkin
-```
-
-#### JSK-visualization
-
-For rviz-visualization the jsk-library is used.
-
-```bash
-sudo apt-get install ros-noetic-jsk-visualization
-```
-
 ## Usage
 
 ### Build
@@ -239,6 +220,21 @@ For the plane segmentation node
 
 ```bash
 roslaunch convex_plane_decomposition_ros convex_plane_decomposition.launch
+```
+
+#### Errors
+If you build with the install flag under ros melodic, you might get issues with the modules not found:
+
+```bash
+terminate called after throwing an instance of 'pybind11::error_already_set'
+  what():  ModuleNotFoundError: No module named 'elevation_mapping_cupy'
+```
+This is because python3 modules are installed into a different location.
+
+This can be fixed by including also the python3 modules location in the `PYTHONPATH` by adding following line into the launch file:
+
+```xml
+<env name="PYTHONPATH" value="<path_to_your_install>/lib/python3/dist-packages:$(env PYTHONPATH)" />
 ```
 
 ### Run TurtleBot example
@@ -326,12 +322,12 @@ The plane segmentation node publishes the following:
 
   A grid map message to visualize the segmentation and some intermediate results. This information is also part of **`planar_terrain`**.
 
-* **`boundaries`**  ([jsk_recognition_msgs/PolygonArray])
+* **`boundaries`**  ([visualization_msgs/MarkerArray])
 
   A set of polygons that trace the boundaries of the segmented region. Holes and boundaries of a single region are published as separate
-  polygons with the same label.
+  markers with the same color.
 
-* **`insets`**  ([jsk_recognition_msgs/PolygonArray])
+* **`insets`**  ([visualization_msgs/PolygonArray])
 
   A set of polygons that are at a slight inward offset from **`boundaries`**. There might be more insets than boundaries since the inward
   shift can cause a single region to break down into multiple when narrow passages exist.
@@ -366,20 +362,30 @@ class NameOfYourPlugin(PluginBase):
 Then, add your plugin setting to `config/plugin_config.yaml`
 
 ```yaml
-example:                                      # Use the same name as your file name.
+example:                                      # Name of your filter
+  type: "example"                             # Specify the name of your plugin (the name of your file name).
   enable: True                                # weather to load this plugin
   fill_nan: True                              # Fill nans to invalid cells of elevation layer.
   is_height_layer: True                       # If this is a height layer (such as elevation) or not (such as traversability)
   layer_name: "example_layer"                 # The layer name.
   extra_params:                               # This params are passed to the plugin class on initialization.
     add_value: 2.0                            # Example param
+    
+example_large:                                # You can apply same filter with different name.
+  type: "example"                             # Specify the name of your plugin (the name of your file name).
+  enable: True                                # weather to load this plugin
+  fill_nan: True                              # Fill nans to invalid cells of elevation layer.
+  is_height_layer: True                       # If this is a height layer (such as elevation) or not (such as traversability)
+  layer_name: "example_layer_large"           # The layer name.
+  extra_params:                               # This params are passed to the plugin class on initialization.
+    add_value: 100.0                          # Example param with larger value.
 ```
 
 Finally, add your layer name to publishers in `config/parameters.yaml`. You can create a new topic or add to existing topics.
 
 ```yaml
   plugin_example: # Topic name
-    layers: [ 'elevation', 'example_layer' ]
+    layers: [ 'elevation', 'example_layer', 'example_layer_large' ]
     basic_layers: [ 'example_layer' ]
     fps: 1.0        # The plugin is called with this fps.
 ```
